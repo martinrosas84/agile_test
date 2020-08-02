@@ -4,6 +4,7 @@ from tornado.ioloop import IOLoop
 from tornado.options import parse_command_line
 from controller.handlers import MainHandler
 from model.cache import DbConnection
+from image_loader import Loader
 
 class WebApplication(tornado.web.Application):
 
@@ -14,14 +15,11 @@ class WebApplication(tornado.web.Application):
             (r"/", MainHandler),
         ]
         tornado.web.Application.__init__(self, handlers, autoreload=True)
-        #IOLoop.current().run_in_executor(self.executor, self.receive_progress)
         self.db = DbConnection()
 
-    def receive_progress(self):
-        while True:
-            print("something")
-
 if __name__ == "__main__":
+    loader = Loader()
+    loader.load_images()
     app = WebApplication()
     parse_command_line()
     app.listen(8888)
