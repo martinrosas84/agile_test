@@ -2,7 +2,7 @@ from tornado import concurrent, gen
 import tornado.web
 from tornado.ioloop import IOLoop
 from tornado.options import parse_command_line
-from controller.handlers import MainHandler
+from controller.handlers import SearchHandler
 from model.cache import DbConnection
 from image_loader import Loader
 
@@ -12,7 +12,7 @@ class WebApplication(tornado.web.Application):
 
     def __init__(self):
         handlers = [
-            (r"/", MainHandler),
+            (r"/search/(.+)", SearchHandler),
         ]
         tornado.web.Application.__init__(self, handlers, autoreload=True)
         self.db = DbConnection()

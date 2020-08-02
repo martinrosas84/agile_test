@@ -26,6 +26,9 @@ class Loader:
     def __init__(self):
         self.tokenizer = Tokenizer()
         self.auth_token = self.tokenizer.get_auth_token()
+        db = DbConnection()
+        db.delete_all()
+        db.close()
 
     def get_page(self, page_number=1):
         '''
