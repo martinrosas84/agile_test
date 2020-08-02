@@ -16,12 +16,12 @@ class DbConnection:
         self.connection.commit()
 
     def search(self, term):
-        self.cursor.execute('''
-        select * from image_data
-        where author like ?
-        or camera like ? 
-        or tags like ?
-        ''', ('%' + term + '%', '%' + term + '%', '%' + term + '%')).fetchall()
+        return self.cursor.execute('''
+                select * from image_data
+                where author like ?
+                or camera like ? 
+                or tags like ?
+                ''', ('%' + term + '%', '%' + term + '%', '%' + term + '%')).fetchall()
 
     def close(self):
         self.cursor.close()

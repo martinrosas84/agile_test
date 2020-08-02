@@ -4,7 +4,7 @@ from tornado import concurrent
 class SearchHandler(RequestHandler):
     def get(self, term):
         images = self.application.db.search(term)
-        self.write(images_to_json(images))
+        self.write({"pictures": self.images_to_json(images)})
 
     def images_to_json(self, images):
         '''
