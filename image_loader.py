@@ -1,4 +1,4 @@
-from tornado import httpclient
+import requests
 import json
 from concurrent import futures
 from model.cache import DbConnection
@@ -13,11 +13,8 @@ class Tokenizer:
         self.token = ""
 
     def get_auth_token(self):
-        request = httpclient.HTTPRequest(url=self.AUTH_URL, method='POST', headers=self.HEADERS,
-                    body=json.dumps({"apiKey": self.API_KEY}))
-        http_client = httpclient.HTTPClient()
-        response = http_client.fetch(request)
-        resp_dict = json.loads(response.body.decode('utf-8'))
+        response = requests.post(self.AUTH_URL, data=json.dumps({"apiKey": self.API_KEY}), headers=self.HEADERS)
+        resp_dict = response.json()
         self.token = "Bearer {}".format( resp_dict['token'])
         return self.token
 
@@ -36,9 +33,8 @@ class Loader:
         params: @page_number: the number of the paginated page
         '''
         url = "http://interview.agileengine.com/images?page={}".format(page_number)
-        http_client = httpclient.HTTPClient()
-        response = http_client.fetch(url, method='GET', headers={'Authorization': self.auth_token})
-        return json.loads(response.body.decode('utf-8'))
+        response = requests.get(url, headers={'Authorization': self.auth_token})
+        return response.json()
 
     def get_pictures(self, page_number):
         '''
@@ -55,9 +51,8 @@ class Loader:
         params: @image_data: The images's information as a dict
         '''
         url = "http://interview.agileengine.com/images/{}".format(image_data['id'])
-        http_client = httpclient.HTTPClient()
-        response = http_client.fetch(url, method='GET', headers={'Authorization': self.auth_token})
-        resp_dict = json.loads(response.body.decode('utf-8'))
+        response = response = requests.get(url, headers={'Authorization': self.auth_token})
+        resp_dict = response.json()
         db = DbConnection()
         db.save_image_data(resp_dict)
         db.close()
