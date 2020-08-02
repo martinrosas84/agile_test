@@ -11,3 +11,13 @@ To run the application simply use:
 ```
 python app_web.py
 ```
+## APIs
+The API to search is:
+```
+GET /search/${searchTerm}
+```
+The API to change the period of time to reload images is:
+```
+GET /reload-timer/${number}
+```
+*number must in minutes
